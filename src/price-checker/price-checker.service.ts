@@ -37,6 +37,7 @@ export class PriceCheckerService {
             currentPrice: price,
             targetPrice: p.targetPrice,
             imageUrl: imageUrl ?? undefined,
+            customerEmail: p.customerEmail,
           });
           this.logger.log(
             `Notified: ${p.url} @ ${price} (target ${p.targetPrice})`,

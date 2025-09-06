@@ -24,6 +24,7 @@ export class NotificationsService {
     currentPrice: number;
     targetPrice: number;
     imageUrl?: string | null;
+    customerEmail: string | any;
   }) {
     this.transporter.verify((error, success) => {
       if (error) {
@@ -33,7 +34,7 @@ export class NotificationsService {
       }
     });
 
-    const to = 'xoaeb100@gmail.com';
+    const to = params.customerEmail;
     const from = 'shoaib100aib@gmail.com';
     const subject = `🔥 Price Drop Alert: ${params.title ?? params.platform} 🎉`;
     const html = `
