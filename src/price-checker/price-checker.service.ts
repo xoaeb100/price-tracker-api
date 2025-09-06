@@ -8,8 +8,7 @@ import { ProductsService } from 'src/product/product.service';
 export class PriceCheckerService {
   private readonly logger = new Logger(PriceCheckerService.name);
 
-  // Defaults to every hour. Override with CRON_EXPRESSION env.
-  @Cron(process.env.CRON_EXPRESSION || '* * * * *')
+  @Cron('* * * * *')
   async checkAll() {
     this.logger.log('Running scheduled price check...');
     const products = await this.products.findAll();

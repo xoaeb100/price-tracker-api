@@ -13,7 +13,7 @@ export class ProductsService {
 
   async create(dto: CreateProductDto) {
     const item = this.repo.create({
-      url: dto.url,
+      url: this.ensureHttps(dto.url),
       platform: dto.platform,
       targetPrice: dto.targetPrice,
       userId: dto.userId ?? null,
@@ -22,7 +22,9 @@ export class ProductsService {
       imageUrl: null,
       currency: null,
       lastCheckedAt: null,
+      customerEmail: dto.customerEmail,
     });
+
     return this.repo.save(item);
   }
 
@@ -54,5 +56,12 @@ export class ProductsService {
   async updatePriceData(id: string, data: Partial<Product>) {
     await this.repo.update({ id }, data);
     return this.findOne(id);
+  }
+
+  ensureHttps(url) {
+    if (!url.startsWith('https://')) {
+      return 'https://' + url;
+    }
+    return url;
   }
 }

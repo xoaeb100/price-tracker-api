@@ -1,4 +1,5 @@
 import {
+  IsEmail,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -14,7 +15,7 @@ export class CreateProductDto {
   @IsNotEmpty()
   url!: string;
 
-  @IsEnum(['amazon', 'flipkart'])
+  @IsEnum(['amazon', 'flipkart', 'croma', 'vijaysales'])
   platform!: Platform;
 
   @IsNumber()
@@ -24,4 +25,8 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   userId?: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  customerEmail?: string;
 }

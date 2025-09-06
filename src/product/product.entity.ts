@@ -33,4 +33,7 @@ export class Product extends BaseEntity {
   // Optional: multi-user support (null = single-user app)
   @Column({ type: 'text', nullable: true })
   userId!: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  customerEmail!: string | null;
 }
