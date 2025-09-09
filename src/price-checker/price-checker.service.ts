@@ -89,4 +89,17 @@ export class PriceCheckerService {
       this.logger.warn(`Stopped price checker job`);
     }
   }
+
+  getStatus() {
+    if (this.schedulerRegistry.doesExist('interval', this.jobName)) {
+      const interval = this.schedulerRegistry.getInterval(this.jobName);
+      return {
+        running: true,
+        jobName: this.jobName,
+        intervalMs: interval._idleTimeout, // ms value
+        intervalSec: interval._idleTimeout / 1000,
+      };
+    }
+    return { running: false, jobName: this.jobName };
+  }
 }

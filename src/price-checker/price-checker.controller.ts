@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PriceCheckerService } from './price-checker.service';
 
 @Controller('price-checker')
@@ -22,5 +22,10 @@ export class PriceCheckerController {
   runOnce() {
     this.priceCheckerService.runCheck();
     return { message: 'Ran price checker once' };
+  }
+
+  @Get('status')
+  status() {
+    return this.priceCheckerService.getStatus();
   }
 }
