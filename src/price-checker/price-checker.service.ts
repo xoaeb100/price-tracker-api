@@ -3,15 +3,29 @@ import { Cron } from '@nestjs/schedule';
 import { ScraperService } from '../scraper/scraper.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { ProductsService } from 'src/product/product.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 @Injectable()
 export class PriceCheckerService {
   private readonly logger = new Logger(PriceCheckerService.name);
+  private jobName = 'price-check-job';
 
-  @Cron('* * * * *')
-  async checkAll() {
+  constructor(
+    private readonly products: ProductsService,
+    private readonly scraper: ScraperService,
+    private readonly notifications: NotificationsService,
+    private schedulerRegistry: SchedulerRegistry,
+  ) {}
+
+  // @Cron('0 * * * *')
+  // async checkAll() {
+  //   await this.runCheck();
+  // }
+
+  async runCheck() {
     this.logger.log('Running scheduled price check...');
     const products = await this.products.findAll();
+
     for (const p of products) {
       try {
         const { title, price, currency, imageUrl } = await this.scraper.scrape(
@@ -39,6 +53,7 @@ export class PriceCheckerService {
             imageUrl: imageUrl ?? undefined,
             customerEmail: p.customerEmail,
           });
+
           this.logger.log(
             `Notified: ${p.url} @ ${price} (target ${p.targetPrice})`,
           );
@@ -53,9 +68,25 @@ export class PriceCheckerService {
     }
   }
 
-  constructor(
-    private readonly products: ProductsService,
-    private readonly scraper: ScraperService,
-    private readonly notifications: NotificationsService,
-  ) {}
+  start(intervalMs: number) {
+    if (this.schedulerRegistry.doesExist('interval', this.jobName)) {
+      this.stop();
+    }
+
+    const callback = () => this.runCheck();
+
+    const interval = setInterval(callback, intervalMs);
+    this.schedulerRegistry.addInterval(this.jobName, interval);
+
+    this.logger.log(
+      `Started price checker job: every ${intervalMs / 1000} seconds`,
+    );
+  }
+
+  stop() {
+    if (this.schedulerRegistry.doesExist('interval', this.jobName)) {
+      this.schedulerRegistry.deleteInterval(this.jobName);
+      this.logger.warn(`Stopped price checker job`);
+    }
+  }
 }
