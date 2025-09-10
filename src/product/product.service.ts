@@ -18,6 +18,7 @@ export class ProductsService {
       targetPrice: dto.targetPrice,
       userId: dto.userId ?? null,
       currentPrice: null,
+      maxPrice: dto.maxPrice,
       title: null,
       imageUrl: null,
       currency: null,
@@ -48,9 +49,9 @@ export class ProductsService {
   }
 
   async remove(id: string) {
-    const item = await this.findOne(id);
-    await this.repo.remove(item);
-    return { deleted: true };
+    const product = await this.repo.findOne({ where: { id } });
+    if (!product) throw new Error('Product not found');
+    return this.repo.remove(product);
   }
 
   async updatePriceData(id: string, data: Partial<Product>) {

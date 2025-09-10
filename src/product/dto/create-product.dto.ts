@@ -22,6 +22,10 @@ export class CreateProductDto {
   @Min(0)
   targetPrice!: number;
 
+  @IsNumber()
+  @Min(0)
+  maxPrice!: number;
+
   @IsOptional()
   @IsString()
   userId?: string;

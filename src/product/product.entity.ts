@@ -1,7 +1,7 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '../common/entities/base.entity';
 
-export type Platform = 'amazon' | 'flipkart';
+export type Platform = 'amazon' | 'flipkart' | 'croma' | 'vijaysales';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -20,6 +20,9 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'numeric' })
   targetPrice!: number;
+
+  @Column({ type: 'numeric' })
+  maxPrice!: number;
 
   @Column({ type: 'timestamp', nullable: true })
   lastCheckedAt!: Date | null;
