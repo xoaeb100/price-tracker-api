@@ -42,24 +42,51 @@ export class PriceCheckerService {
           lastCheckedAt: new Date(),
         });
 
-        // Notify if target reached
-        if (typeof price === 'number' && price <= p.targetPrice) {
-          await this.notifications.sendPriceDropEmail({
-            platform: p.platform,
-            title: title ?? p.title,
-            url: p.url,
-            currentPrice: price,
-            targetPrice: p.targetPrice,
-            imageUrl: imageUrl ?? undefined,
-            customerEmail: p.customerEmail,
-          });
+        if (typeof price === 'number') {
+          // Notify if price is lower than targetPrice
+          if (price <= p.targetPrice) {
+            await this.notifications.sendPriceDropEmail({
+              platform: p.platform,
+              title: title ?? p.title,
+              url: p.url,
+              currentPrice: price,
+              targetPrice: p.targetPrice,
+              imageUrl: imageUrl ?? undefined,
+              customerEmail: p.customerEmail,
+              messageType: 'PRICE_DROP',
+            });
+            this.logger.log(
+              `Notified: ${p.url} @ ${price} (target ${p.targetPrice})`,
+            );
+          }
 
-          this.logger.log(
-            `Notified: ${p.url} @ ${price} (target ${p.targetPrice})`,
-          );
+          // Notify if price is higher than maxPrice
+          if (p.maxPrice && price >= p.maxPrice) {
+            await this.notifications.sendPriceDropEmail({
+              platform: p.platform,
+              title: title ?? p.title,
+              url: p.url,
+              currentPrice: price,
+              targetPrice: p.maxPrice,
+              imageUrl: imageUrl ?? undefined,
+              customerEmail: p.customerEmail,
+              messageType: 'PRICE_HIGH', // optional: differentiate in email
+            });
+            this.logger.log(
+              `Notified: ${p.url} @ ${price} (maxPrice ${p.maxPrice})`,
+            );
+          }
+
+          if (
+            !(price <= p.targetPrice || (p.maxPrice && price >= p.maxPrice))
+          ) {
+            this.logger.log(
+              `Checked: ${p.url} => ${price} (target ${p.targetPrice}, max ${p.maxPrice ?? 'n/a'})`,
+            );
+          }
         } else {
           this.logger.log(
-            `Checked: ${p.url} => ${price ?? 'n/a'} (target ${p.targetPrice})`,
+            `Checked: ${p.url} => n/a (target ${p.targetPrice}, max ${p.maxPrice ?? 'n/a'})`,
           );
         }
       } catch (err: any) {
