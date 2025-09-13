@@ -15,6 +15,7 @@ export class ProductsService {
     const item = this.repo.create({
       url: this.ensureHttps(dto.url),
       platform: dto.platform,
+      productId: dto.productId,
       targetPrice: dto.targetPrice,
       userId: dto.userId ?? null,
       currentPrice: null,

@@ -39,4 +39,6 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'text', nullable: true })
   customerEmail!: string | null;
+  @Column({ type: 'text', nullable: true })
+  productId!: string | null;
 }

@@ -11,9 +11,8 @@ import {
 import { Platform } from '../product.entity';
 
 export class CreateProductDto {
-  @IsUrl()
-  @IsNotEmpty()
-  url!: string;
+  @IsOptional()
+  url?: string;
 
   @IsEnum(['amazon', 'flipkart', 'croma', 'vijaysales'])
   platform!: Platform;
@@ -33,4 +32,8 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsEmail()
   customerEmail?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  productId?: string;
 }
