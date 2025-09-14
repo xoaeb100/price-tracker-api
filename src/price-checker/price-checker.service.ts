@@ -28,15 +28,15 @@ export class PriceCheckerService {
 
     for (const p of products) {
       try {
-        const { title, price, currency, imageUrl } = await this.scraper.scrape(
-          p.platform,
-          p.productId!,
-        );
+        const { title, price, currency, imageUrl, url } =
+          await this.scraper.scrape(p.platform, p.productId!);
 
-        // Update DB with fresh data
+        console.log(p.url, '<<<<<');
         await this.products.updatePriceData(p.id, {
           title: title ?? p.title,
           currentPrice: price,
+          url: url ?? p.url,
+
           currency: currency ?? p.currency,
           imageUrl: imageUrl ?? p.imageUrl,
           lastCheckedAt: new Date(),

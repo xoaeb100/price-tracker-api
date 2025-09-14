@@ -36,6 +36,7 @@ export class ScraperService {
     price: number | null;
     currency: string | null;
     imageUrl: string | null;
+    url: string | null;
   }> {
     if (!PLATFORM_URLS[platform]) {
       throw new Error(`Unsupported platform: ${platform}`);
@@ -103,7 +104,7 @@ export class ScraperService {
       ? priceText.replace(/[0-9.,\s]/g, '').trim() || '₹'
       : '₹';
 
-    return { title, price, currency, imageUrl };
+    return { title, price, currency, imageUrl, url };
   }
 
   // -------- FLIPKART --------
@@ -150,7 +151,7 @@ export class ScraperService {
       : '₹';
 
     await browser.close();
-    return { title, price, imageUrl, currency };
+    return { title, price, imageUrl, currency, url };
   }
 
   // -------- CROMA --------
@@ -191,7 +192,7 @@ export class ScraperService {
       : '₹';
 
     await browser.close();
-    return { title, price, imageUrl, currency };
+    return { title, price, imageUrl, currency, url };
   }
 
   // -------- VIJAY SALES --------
@@ -225,6 +226,6 @@ export class ScraperService {
       ? priceText.replace(/[0-9.,\s]/g, '').trim() || '₹'
       : '₹';
 
-    return { title, price, imageUrl, currency };
+    return { title, price, imageUrl, currency, url };
   }
 }

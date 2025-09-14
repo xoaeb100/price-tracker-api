@@ -4,15 +4,10 @@ import * as nodemailer from 'nodemailer';
 @Injectable()
 export class NotificationsService {
   private transporter = nodemailer.createTransport({
-    host:
-      // process.env.MAIL_HOST ||
-      'smtp-relay.brevo.com',
-
-    port: Number(process.env.MAIL_PORT || 587),
-    secure: false,
+    service: 'gmail',
     auth: {
-      user: '959e94001@smtp-brevo.com',
-      pass: 'S9HnQNpacdYZhWkR',
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
     },
   });
 
