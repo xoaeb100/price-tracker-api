@@ -22,7 +22,7 @@ export class NotificationsService {
     url: string;
     platform: string;
     currentPrice: number;
-    targetPrice: number;
+    minPrice: number;
     imageUrl?: string | null;
     customerEmail: string | any;
     messageType?: 'PRICE_DROP' | 'PRICE_HIGH';
@@ -59,7 +59,7 @@ export class NotificationsService {
           💰 Now at: <span style="color: #28a745;">₹${params.currentPrice}</span>
         </p>
         <p style="font-size: 16px; text-align: center; margin: 5px 0; color: #888;">
-          (Your target: ₹${params.targetPrice})
+          (Your target: ₹${params.minPrice})
         </p>
       </div>
 
@@ -108,7 +108,7 @@ export class NotificationsService {
           🔺 Now at: <span style="color: #dc3545;">₹${params.currentPrice}</span>
         </p>
         <p style="font-size: 16px; text-align: center; margin: 5px 0; color: #888;">
-          (Your max alert was: ₹${params.targetPrice})
+          (Your max alert was: ₹${params.minPrice})
         </p>
       </div>
 

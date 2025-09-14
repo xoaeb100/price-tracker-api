@@ -43,20 +43,20 @@ export class PriceCheckerService {
         });
 
         if (typeof price === 'number') {
-          // Notify if price is lower than targetPrice
-          if (price <= p.targetPrice) {
+          // Notify if price is lower than minPrice
+          if (price <= p.minPrice) {
             await this.notifications.sendPriceDropEmail({
               platform: p.platform,
               title: title ?? p.title,
               url: p.url,
               currentPrice: price,
-              targetPrice: p.targetPrice,
+              minPrice: p.minPrice,
               imageUrl: imageUrl ?? undefined,
               customerEmail: p.customerEmail,
               messageType: 'PRICE_DROP',
             });
             this.logger.log(
-              `Notified: ${p.url} @ ${price} (target ${p.targetPrice})`,
+              `Notified: ${p.url} @ ${price} (target ${p.minPrice})`,
             );
           }
 
@@ -67,7 +67,7 @@ export class PriceCheckerService {
               title: title ?? p.title,
               url: p.url,
               currentPrice: price,
-              targetPrice: p.maxPrice,
+              minPrice: p.maxPrice,
               imageUrl: imageUrl ?? undefined,
               customerEmail: p.customerEmail,
               messageType: 'PRICE_HIGH', // optional: differentiate in email
@@ -77,16 +77,14 @@ export class PriceCheckerService {
             );
           }
 
-          if (
-            !(price <= p.targetPrice || (p.maxPrice && price >= p.maxPrice))
-          ) {
+          if (!(price <= p.minPrice || (p.maxPrice && price >= p.maxPrice))) {
             this.logger.log(
-              `Checked: ${p.url} => ${price} (target ${p.targetPrice}, max ${p.maxPrice ?? 'n/a'})`,
+              `Checked: ${p.url} => ${price} (target ${p.minPrice}, max ${p.maxPrice ?? 'n/a'})`,
             );
           }
         } else {
           this.logger.log(
-            `Checked: ${p.url} => n/a (target ${p.targetPrice}, max ${p.maxPrice ?? 'n/a'})`,
+            `Checked: ${p.url} => n/a (target ${p.minPrice}, max ${p.maxPrice ?? 'n/a'})`,
           );
         }
       } catch (err: any) {

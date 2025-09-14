@@ -4,5 +4,5 @@ export class UpdateProductDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  targetPrice?: number;
+  minPrice?: number;
 }

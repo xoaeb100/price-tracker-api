@@ -16,7 +16,7 @@ export class ProductsService {
       url: this.ensureHttps(dto.url),
       platform: dto.platform,
       productId: dto.productId,
-      targetPrice: dto.targetPrice,
+      minPrice: dto.minPrice,
       userId: dto.userId ?? null,
       currentPrice: null,
       maxPrice: dto.maxPrice,

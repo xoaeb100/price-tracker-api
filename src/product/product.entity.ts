@@ -19,7 +19,7 @@ export class Product extends BaseEntity {
   currentPrice!: number | null;
 
   @Column({ type: 'numeric' })
-  targetPrice!: number;
+  minPrice!: number;
 
   @Column({ type: 'numeric' })
   maxPrice!: number;
