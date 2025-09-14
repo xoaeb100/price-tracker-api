@@ -4,11 +4,14 @@ import { Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductHistory } from './productHistory.enitity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private readonly repo: Repository<Product>,
+    @InjectRepository(ProductHistory)
+    private readonly historyRepo: Repository<ProductHistory>,
   ) {}
 
   async create(dto: CreateProductDto) {
@@ -28,6 +31,27 @@ export class ProductsService {
     });
 
     return this.repo.save(item);
+  }
+  async updatePriceData(id: string, data: Partial<Product>) {
+    // Update product
+    await this.repo.update({ id }, data);
+    const updated = await this.findOne(id);
+
+    // Log history
+    await this.historyRepo.save({
+      productId: updated.id,
+      url: updated.url,
+      platform: updated.platform,
+      title: updated.title,
+      price: updated.currentPrice,
+      currency: updated.currency,
+      imageUrl: updated.imageUrl,
+      checkedAt: new Date(),
+      userId: updated.userId,
+      customerEmail: updated.customerEmail,
+    });
+
+    return updated;
   }
 
   findAll(userId?: string) {
@@ -53,11 +77,6 @@ export class ProductsService {
     const product = await this.repo.findOne({ where: { id } });
     if (!product) throw new Error('Product not found');
     return this.repo.remove(product);
-  }
-
-  async updatePriceData(id: string, data: Partial<Product>) {
-    await this.repo.update({ id }, data);
-    return this.findOne(id);
   }
 
   ensureHttps(url) {
