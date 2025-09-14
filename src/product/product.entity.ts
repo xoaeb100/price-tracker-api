@@ -41,4 +41,7 @@ export class Product extends BaseEntity {
   customerEmail!: string | null;
   @Column({ type: 'text', nullable: true })
   productId!: string | null;
+
+  @Column({ type: 'boolean', default: true })
+  sendMail!: boolean;
 }

@@ -1,4 +1,6 @@
 import {
+  IsBoolean,
+  isBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -36,4 +38,8 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsString()
   productId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  sendMail?: boolean;
 }

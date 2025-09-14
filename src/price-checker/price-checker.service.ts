@@ -42,7 +42,12 @@ export class PriceCheckerService {
           lastCheckedAt: new Date(),
         });
 
-        if (typeof price === 'number') {
+        if (
+          p.sendMail &&
+          typeof price === 'number' &&
+          !isNaN(price) &&
+          price > 0
+        ) {
           // Notify if price is lower than minPrice
           if (price <= p.minPrice) {
             await this.notifications.sendPriceDropEmail({

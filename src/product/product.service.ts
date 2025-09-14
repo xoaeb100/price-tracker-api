@@ -28,6 +28,7 @@ export class ProductsService {
       currency: null,
       lastCheckedAt: null,
       customerEmail: dto.customerEmail,
+      sendMail: dto.sendMail ?? true,
     });
 
     return this.repo.save(item);
