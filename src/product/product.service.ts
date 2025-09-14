@@ -86,4 +86,21 @@ export class ProductsService {
     }
     return url;
   }
+
+  async logPrice(productId: string, price: number) {
+    const item = this.historyRepo.create({
+      productId,
+      price,
+      checkedAt: new Date(),
+    });
+    return this.historyRepo.save(item);
+  }
+
+  async findByProduct(productId: string) {
+    return this.historyRepo.find({
+      where: { productId },
+      order: { checkedAt: 'DESC' },
+      take: 100,
+    });
+  }
 }

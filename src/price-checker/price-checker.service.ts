@@ -11,7 +11,7 @@ export class PriceCheckerService {
   private jobName = 'price-check-job';
 
   constructor(
-    private readonly products: ProductsService,
+    private readonly productsSvc: ProductsService,
     private readonly scraper: ScraperService,
     private readonly notifications: NotificationsService,
     private schedulerRegistry: SchedulerRegistry,
@@ -24,15 +24,14 @@ export class PriceCheckerService {
 
   async runCheck() {
     this.logger.log('Running scheduled price check...');
-    const products = await this.products.findAll();
+    const products = await this.productsSvc.findAll();
 
     for (const p of products) {
       try {
         const { title, price, currency, imageUrl, url } =
           await this.scraper.scrape(p.platform, p.productId!);
 
-        console.log(p.url, '<<<<<');
-        await this.products.updatePriceData(p.id, {
+        await this.productsSvc.updatePriceData(p.id, {
           title: title ?? p.title,
           currentPrice: price,
           url: url ?? p.url,
@@ -41,7 +40,9 @@ export class PriceCheckerService {
           imageUrl: imageUrl ?? p.imageUrl,
           lastCheckedAt: new Date(),
         });
-
+        if (typeof price === 'number' && price > 0) {
+          await this.productsSvc.logPrice(p.id, price);
+        }
         if (
           p.sendMail &&
           typeof price === 'number' &&

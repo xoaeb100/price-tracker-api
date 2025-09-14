@@ -40,4 +40,9 @@ export class ProductsController {
   remove(@Param('id') id: string) {
     return this.products.remove(id);
   }
+
+  @Get('history/:productId')
+  async getHistory(@Param('productId') productId: string) {
+    return this.products.findByProduct(productId);
+  }
 }
