@@ -25,27 +25,15 @@ import { PriceCheckerModule } from './price-checker/price-checker.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         const databaseUrl = config.get<string>('DATABASE_URL');
-        if (databaseUrl) {
-          // Use DATABASE_URL if available (Railway)
-          return {
-            type: 'postgres',
-            url: databaseUrl,
-            ssl: { rejectUnauthorized: false },
-            autoLoadEntities: true,
-            synchronize: true, // dev only; use migrations in prod
-          };
+        if (!databaseUrl) {
+          throw new Error('DATABASE_URL is not defined');
         }
-
-        // Fallback to individual host/port (local dev)
         return {
           type: 'postgres',
-          host: config.get<string>('DB_HOST', 'localhost'),
-          port: parseInt(config.get<string>('DB_PORT', '5432'), 10),
-          username: config.get<string>('DB_USER', 'postgres'),
-          password: config.get<string>('DB_PASS', 'postgres'),
-          database: config.get<string>('DB_NAME', 'price_tracker'),
+          url: databaseUrl,
+          ssl: { rejectUnauthorized: false },
           autoLoadEntities: true,
-          synchronize: true, // dev only; use migrations in prod
+          synchronize: true, // dev only
         };
       },
     }),
