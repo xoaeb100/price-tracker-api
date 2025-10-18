@@ -21,10 +21,10 @@ export class ProductHistory extends BaseEntity {
   @Index()
   productId!: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   url!: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   platform!: Platform;
 
   @Column({ type: 'text', nullable: true })
